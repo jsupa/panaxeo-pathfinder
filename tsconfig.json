@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "esModuleInterop": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+
+    "outDir": "dist",
+
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitAny": true,
+
+
+    "baseUrl": ".",
+    "paths": {
+      "@extra": ["./src/helpers/global.helper.ts"],
+      "@config": ["./src/config/index.ts"],
+      "@routes": ["./src/routes/index.ts"],
+      "@controller/*": ["./src/controllers/*.ts"],
+      "@model/*": ["./src/models/*.ts"],
+      "@helper/*": ["./src/helpers/*.ts"],
+      "@middleware/*": ["./src/middlewares/*.ts"],
+      "@routes/*": ["./src/routes/*.ts"],
+      "@lib/*": ["./src/lib/*"],
+    },
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  },
+  "include": ["src", "types"],
+  "exclude": ["node_modules"]
+}
