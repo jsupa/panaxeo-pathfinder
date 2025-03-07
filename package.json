@@ -1,13 +1,14 @@
 {
-  "name": "template",
+  "name": "panaxeo-pathfinder",
   "version": "1.0.0",
-  "description": "Template",
+  "description": "A pathfinding application for Panaxeo",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc --noEmit false && tsc-alias",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "import:citiesData": "tsx src/tasks/citiesData.import.ts"
   },
   "author": "toto.je@kubov.email",
   "license": "ISC",

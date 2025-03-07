@@ -1,1 +1,82 @@
-h4 Helllo Home #{title}
+doctype html
+html
+  head
+    style.
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAy7N_FlSWqF3JgO5Dh_bqBTQCGObOZVj0&libraries=geometry')
+    script.
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: { lat: 48.548, lng: 19.507 }
+        });
+        var cities = !{JSON.stringify(cities)};
+        var markers = [];
+        var selectedCities = [
+          "Gelnica", "Spišská Nová Ves", "Poprad", "Liptovský Mikuláš", "Ružomberok", "Martin", "Žilina", "Považská Bystrica", "Púchov", "Dubnica nad Váhom", "Nová Dubnica", "Trenčín", "Nové Mesto nad Váhom", "Piešťany", "Hlohovec", "Trnava", "Bratislava", "Pezinok", "Senec", "Galanta", "Šaľa", "Nitra", "Partizánske", "Prievidza", "Handlová", "Banská Bystrica", "Zvolen", "Detva", "Revúca", "Rožňava", "Košice", "Prešov", "Vranov nad Topľou", "Humenné", "Snina", "Michalovce", "Trebišov", "Bardejov", "Stará Ľubovňa", "Kežmarok", "Brezno", "Žiar nad Hronom", "Levice", "Nové Zámky", "Komárno", "Štúrovo", "Veľký Krtíš", "Lučenec", "Fiľakovo", "Rimavská Sobota", "Gelnica"
+        ];
+
+        cities.forEach(function(city) {
+          var isSelected = selectedCities.includes(city.name);
+          var marker = new google.maps.Marker({
+            position: { lat: city.latitude, lng: city.longitude },
+            map: map,
+            title: city.name,
+            icon: city.name === 'Gelnica' ? 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png' : (isSelected ? 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'),
+            label: {
+              text: city.population.toString(),
+              color: 'black',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }
+          });
+          var infoWindow = new google.maps.InfoWindow({
+            content: `<h3>${city.name}</h3><p>Population: ${city.population}</p>`
+          });
+          marker.addListener('click', function() {
+            infoWindow.open(map, marker);
+          });
+          markers.push(marker);
+        });
+
+        drawPath(map, markers, selectedCities);
+      }
+
+      function drawPath(map, markers, selectedCities) {
+        var path = [];
+        selectedCities.forEach(function(cityName) {
+          var marker = markers.find(marker => marker.getTitle() === cityName);
+          if (marker) {
+            path.push(marker);
+          }
+        });
+
+        var line = new google.maps.Polyline({
+          path: path.map(marker => marker.getPosition()),
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        line.setMap(map);
+
+        for (let i = 0; i < path.length - 1; i++) {
+          var distance = google.maps.geometry.spherical.computeDistanceBetween(path[i].getPosition(), path[i + 1].getPosition());
+          var midPoint = google.maps.geometry.spherical.interpolate(path[i].getPosition(), path[i + 1].getPosition(), 0.5);
+          var distanceLabel = new google.maps.InfoWindow({
+            content: `${(distance / 1000).toFixed(2)} km`,
+            position: midPoint
+          });
+          //- distanceLabel.open(map);
+        }
+
+        var cityNames = path.map(marker => marker.getTitle()).join(', ');
+        document.getElementById('city-names').value = cityNames;
+      }
+  body(onload='initMap()')
+    #map(style='height: 100%; width: 100%;')
+    input#city-names(type='text', readonly, style='width: 100%; margin-top: 10px;')

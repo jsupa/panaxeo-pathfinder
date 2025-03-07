@@ -1,9 +1,14 @@
+import City from '@model/city.model'
 import type { Request, Response } from 'express'
 
-const index = (_req: Request, res: Response): void => {
+const index = async (_req: Request, res: Response) => {
   res.setTemplate('home/index')
-  // res.withoutLayout()
-  res.setLocals('title', 'Waaa')
+  res.withoutLayout()
+
+  const cities = await City.find()
+
+  res.setLocals('cities', cities)
+
   res.renderino()
 }
 
